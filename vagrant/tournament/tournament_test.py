@@ -88,8 +88,8 @@ def testReportMatches():
     registerPlayer("Diane Grant")
     standings = playerStandings()
     [id1, id2, id3, id4] = [row[0] for row in standings]
-    reportMatch(id1, id2, 1)
-    reportMatch(id3, id4, 2)
+    reportMatch(id1, id2)
+    reportMatch(id3, id4)
     standings = playerStandings()
     for (i, n, w, m) in standings:
         if m != 1:
@@ -110,8 +110,8 @@ def testPairings():
     registerPlayer("Pinkie Pie")
     standings = playerStandings()
     [id1, id2, id3, id4] = [row[0] for row in standings]
-    reportMatch(id1, id2, 1)
-    reportMatch(id3, id4, 2)
+    reportMatch(id1, id2)
+    reportMatch(id3, id4)
     pairings = swissPairings()
     if len(pairings) != 2:
         raise ValueError(
