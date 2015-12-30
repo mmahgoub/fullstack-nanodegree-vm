@@ -9,13 +9,13 @@ from database_adapter import DB
 def deleteMatches():
     """Remove all the match records from the database."""
 
-    DB().execute("DELETE FROM matches", True)
+    DB().execute("DELETE FROM matches", and_close=True)
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
 
-    DB().execute("DELETE FROM players", True)
+    DB().execute("DELETE FROM players", and_close=True)
 
 
 def countPlayers():
@@ -40,7 +40,7 @@ def registerPlayer(name):
     db = DB()
     cur = db.cursor()
     query = cur.mogrify("INSERT INTO players (name) values (%s)", (name,))
-    db.execute(query, True)
+    db.execute(query, and_close=True)
 
 
 def playerStandings():
@@ -76,7 +76,7 @@ def reportMatch(winner, loser):
     cur = db.cursor()
     query = cur.mogrify("INSERT INTO matches (winner, loser) values (%s, %s)",
                         (winner, loser))
-    db.execute(query, True)
+    db.execute(query, and_close=True)
 
 
 def swissPairings():

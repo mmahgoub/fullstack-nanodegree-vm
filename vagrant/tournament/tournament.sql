@@ -8,7 +8,7 @@
 
 --====--====--====--====--====--====--====--====--====--====--====--====--====
 
--- Drop statements to insure clean run
+-- Drop statements to ensure clean run
 
 DROP VIEW IF EXISTS next_round;
 
@@ -34,9 +34,22 @@ DROP VIEW IF EXISTS winners;
 
 DROP VIEW IF EXISTS players_standings;
 
-DROP TABLE IF EXISTS players;
+DROP TABLE IF EXISTS tournaments_players;
 
 DROP TABLE IF EXISTS matches;
+
+DROP TABLE IF EXISTS players;
+
+DROP TABLE IF EXISTS tournaments;
+
+
+-- Create tournaments table
+
+CREATE TABLE tournaments (
+	id serial PRIMARY KEY,
+	name varchar(255),
+	data date NOT NULL DEFAULT CURRENT_DATE
+);
 
 -- Create players table
 
@@ -45,13 +58,22 @@ CREATE TABLE players (
 	name varchar(255)
 );
 
+-- Create tournament participants table
+
+CREATE TABLE tournaments_players (
+	player_id integer REFERENCES players(id),
+	tournament_id integer REFERENCES tournaments(id)
+);
+
+
+
 -- Create matches table
 
 CREATE TABLE matches (
 	id serial PRIMARY KEY,
-	tournament_id integer,
-	winner integer NOT NULL,
-	loser integer NOT NULL
+	tournament_id integer REFERENCES tournaments(id),
+	winner integer NOT NULL REFERENCES players(id),
+	loser integer NOT NULL REFERENCES players(id)
 );
 
 
