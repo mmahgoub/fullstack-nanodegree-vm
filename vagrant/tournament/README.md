@@ -12,7 +12,7 @@ To run first launch psql in your shell `$ psql` then you need to create a fresh 
 ```
 CREATE DATABASE tournament;
 ```
-Then connect to the database you just created using `=> tournament`
+Then connect to the database you just created using `=> \c tournament`
 You can use the command \i tournament.sql to import the whole file into psql at once.
 
 ```
