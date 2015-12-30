@@ -64,7 +64,7 @@ def playerStandings():
 
 
 # I had to add a third argument to report which match is it!
-def reportMatch(winner, loser, match_id):
+def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
 
     Args:
