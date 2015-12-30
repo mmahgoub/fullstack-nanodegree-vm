@@ -32,15 +32,11 @@ DROP VIEW IF EXISTS winners_count;
 
 DROP VIEW IF EXISTS winners;
 
-DROP VIEW IF EXISTS players_count;
-
 DROP VIEW IF EXISTS players_standings;
 
 DROP TABLE IF EXISTS players;
 
 DROP TABLE IF EXISTS matches;
-
-DROP TABLE IF EXISTS standings;
 
 -- Create players table
 
@@ -53,24 +49,11 @@ CREATE TABLE players (
 
 CREATE TABLE matches (
 	id serial PRIMARY KEY,
-	tournament_id integer  NOT NULL
+	tournament_id integer,
+	winner integer NOT NULL,
+	loser integer NOT NULL
 );
 
--- Create standings/results of matches table
-
-CREATE TABLE standings (
-	match_id integer NOT NULL,	
-	player_id integer  NOT NULL,
-	wins integer NOT NULL
-);
-
--- View to count all players
-
-CREATE VIEW players_count as (
-	select  
-		count(id) as count 
-	from players
-);
 
 -- View to display all players standings
 
@@ -78,10 +61,11 @@ CREATE VIEW players_standings as (
 	select 
 		players.id as id, 
 		players.name as name, 
-		COALESCE(sum(standings.wins), 0) as wins, 
-		count(standings.match_id) as matches 
+		COALESCE(count(w.winner), 0) as wins, 
+		count(w.winner) + count(l.loser) as matches 
 	from players 
-	left join standings on players.id = standings.player_id 
+	left join matches as w on players.id = w.winner 
+	left join matches as l on players.id = l.loser 
 	group by players.id
 	order by wins
 );
@@ -95,7 +79,7 @@ CREATE VIEW winners as (
 		name 
 	from players_standings
 	order by wins desc
-	limit (select count/2 from players_count)
+	limit (select count(*)/2 from players)
 );
 
 
@@ -138,7 +122,7 @@ CREATE VIEW losers as (
 		name 
 	from players_standings
 	order by wins asc
-	limit (select count/2 from players_count)
+	limit (select count(*)/2 from players)
 );
 
 

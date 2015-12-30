@@ -9,7 +9,7 @@ from database_adapter import DB
 def deleteMatches():
     """Remove all the match records from the database."""
 
-    DB().execute("DELETE FROM standings", True)
+    DB().execute("DELETE FROM matches", True)
 
 
 def deletePlayers():
@@ -74,8 +74,8 @@ def reportMatch(winner, loser, match_id):
 
     db = DB()
     cur = db.cursor()
-    query = cur.mogrify("INSERT INTO standings (player_id, wins, match_id) values (%s, %s, %s), (%s, %s, %s)",
-                        (winner, 1, match_id, loser, 0, match_id))
+    query = cur.mogrify("INSERT INTO matches (winner, loser) values (%s, %s)",
+                        (winner, loser))
     db.execute(query, True)
 
 
