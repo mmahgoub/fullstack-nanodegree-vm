@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}title{% endblock %}
+{% block head %}
+{{super()}}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="medium-12 columns">
+	<h2>{{title}}</h2>
+	</div>
+</div>
+<div class="row">
+    <div class="medium-3 columns">
+    	<ul class="menu vertical cat-menu">
+		    {% for cat in categories_menu %}
+		    <li><a href="{{url_for('category_view', id = cat.id )}}"> {{ cat.name }} </a></li>
+		    {% endfor %}
+		</ul>
+    </div>
+  <div class="medium-9 columns">
+  	<div class="media-object">
+	    <div class="media-object-section">
+	        <div class="thumbnail">
+	            <img class="item-img" src="http://localhost:5000/static/img/{{item.picture}}">
+	        </div>
+	    </div>
+	    <div class="media-object-section">
+	        <h4>{{item.name}}</h4>
+	        <p>{{item.description}}</p>
+	        <p class="price"><small>Price: ${{item.price}}</small></p>
+	        {% if item.user_id == session['userID'] %}        
+			<a href="{{url_for('items_edit', id = item.id)}}">Edit</a> - <a href="{{url_for('items_remove', id = item.id)}}">Remove</a>
+			{% endif %}
+	    </div>
+	</div>
+  </div>
+</div>
+{% endblock %}
+

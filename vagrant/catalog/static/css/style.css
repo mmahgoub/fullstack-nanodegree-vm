@@ -1,0 +1,61 @@
+@import "//fonts.googleapis.com/css?family=Exo+2:200,400,400italic,300italic,300,700,700italic,900";
+
+body {
+	background-color: #2E2721;
+	color: #EDD6A9;
+	font-family: "Exo 2";
+}
+label {
+	color: #EDD6A9;
+}
+h1, h2, h3, h4, h5, h6 {
+	color: #F5B045;
+	font-family: "Exo 2";
+	font-weight: 200;
+}
+a, .top-bar ul a {
+	color: #B84D18;
+}
+a:hover, .top-bar ul a:hover {
+	color: #F5B045;
+}
+.top-bar,  .top-bar ul {
+	background-color: #fff;
+}
+.top-bar {
+	margin-bottom: 10px;
+}
+.top-bar .menu-text {
+	color: #F5B045;
+}
+.cat-menu {
+	background-color: #28211B;
+}
+.cat-menu li {
+	border-bottom: 1px solid #634E42;
+}
+.account {
+	min-height: 50px;
+	text-align: right;
+}
+.item-img {
+	width: 160px;
+	position: relative;
+}
+img.item-img {
+	max-height: 100%;
+}
+.price {
+	color: #F5B045;
+}
+.user-avatar {
+	max-height: 50px;
+	border-radius: 30px;
+	border: solid 2px #F5B045;
+}
+.user-avatar-container {
+	width: 56px;
+}
+.fb-btn {
+	margin: 4px 10px;
+}

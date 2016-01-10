@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block head %}
+{{super()}}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="medium-12 columns">
+	<h2>{{title}}</h2>
+	</div>
+</div>
+<div class="row">
+    <div class="medium-3 columns">
+    	<ul class="menu vertical cat-menu">
+    		<li><a href="{{url_for('items_new')}}"><strong>New Item</strong></a></li>
+    		<li><a href="{{url_for('category_new')}}"><strong>New Category</strong></a></li>
+		    {% for category in categories_menu %}
+		    <li><a href="{{url_for('category_edit', id = category.id )}}"> <span>{{ category.name }} </span> <small>(edit)</small></a></li>
+		    {% endfor %}
+		</ul>
+    </div>
+  <div class="medium-6 columns">
+  	  	<form method="post" action="{{url_for('category_edit', id = category.id )}}">
+		  <div class="row">
+		    <div class="medium-12 columns">
+		        <input type="text" name="name" value="{{category.name}}" placeholder="Name">
+		    </div>
+		    <div class="medium-12 columns">
+		        <input type="text" name="description" value="{{category.description}}" placeholder="Description">
+		    </div>
+		  </div>
+		  <div class="row">
+		  	<div class="medium-12 columns">
+		  	<button type="submit" class="button warning">Save</button>
+		  	<a href="{{url_for('category_remove', id = category.id )}}" class="button alert">Delete</a>
+		  	</div>
+		  </div>
+		</form>
+  </div>
+  <div class="medium-3 columns">
+  </div>  	
+</div>
+{% endblock %}
+

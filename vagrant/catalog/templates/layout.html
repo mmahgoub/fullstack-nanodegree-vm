@@ -1,0 +1,162 @@
+<html>
+
+<head>
+    {% block head %}
+    <title>{% block title %}{% endblock %} - Udacity Catalog</title>
+    <!-- Foundation Framework Compressed CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.1.1/foundation.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+    <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer type="text/javascript"></script>
+    {% endblock %}
+</head>
+
+<body>
+    <div class="top-bar">
+        <div class="row">
+            <div class="top-bar-left">
+                <ul class="dropdown menu" data-dropdown-menu>
+                    <li class="menu-text">Udacity Catalog</li>
+                    <li class="">
+                        <a href="{{url_for('index')}}">Home</a>
+                    </li>
+                    {% if session['userID'] %}
+                    <li class="">
+                        <a href="{{url_for('category_new')}}">Manage</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="top-bar-right">
+                <form id="searchform" method="get" action="javascript: document.location.href='/search/'+encodeURI($('#q').val());">
+                    <ul class="menu">
+                        <li>
+                            <input type="search" name="q" id="q" placeholder="Search term..">
+                        </li>
+                        <li>
+                            <button type="submit" class="button warning">Search</button>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="account clearfix">
+            {% if session['userID'] %}
+            <div class="user-avatar-container float-right">
+                <img class="user-avatar" src="{{session['picture']}}" /></div>
+            <div class="user-name-container float-right">
+                {{session['username']}}
+                <br />
+                <small><a href="{{url_for('logout')}}">Logout</a></small>
+            </div>
+            {% else %}
+            <div id="signinButton " class="float-right">
+                <span class="g-signin" data-scope="openid email" data-clientid="358087145997-tobhcfa14r4a1k1thnj4dcc1chjhkfc8.apps.googleusercontent.com" data-redirecturi="postmessage" data-accesstype="offline" data-cookiepolicy="single_host_origin" data-callback="signInCallback" data-approvalprompt="force">
+	</span>
+            </div>
+            <div class="fb-btn fb-login-button" onlogin="sendTokenToServer();" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false" scope="public_profile,email"></div>
+
+            {% endif %}
+        </div>
+        {% with messages = get_flashed_messages() %} {% if messages %}
+        <div class='callout warning small' data-closable>
+            {% for message in messages %} {{ message }} {% endfor %}
+        </div>
+        {% endif %} {% endwith %}
+    </div>
+    {% block content %} {% endblock %}
+    <div id="fb-root"></div>
+    
+    <script>
+
+    function signInCallback(authResult) {
+        if (authResult['code']) {
+            // Hide the sign-in button now that the user is authorized
+            $('#signinButton').attr('style', 'display: none');
+            // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+            $.ajax({
+                type: 'POST',
+                url: "/gconnect?state={{session['state']}}",
+                processData: false,
+                data: authResult['code'],
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function(result) {
+                    // Handle or verify the server response if necessary.
+                    console.log(result);
+                    if (result) {
+                        $('#signinButton').remove();
+                        $('.account').text(result);
+                        setTimeout(function() {
+                            window.location.href = "/";
+                        }, 1000);
+
+                    } else if (authResult['error']) {
+                        console.log('There was an error: ' + authResult['error']);
+                    } else {
+                        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                    }
+                }
+
+            });
+        }
+    }
+    </script>
+    <script>
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId: '425229091010469',
+            cookie: true, // enable cookies to allow the server to access the session
+            xfbml: true, // parse social plugins on this page
+            version: 'v2.2' // use version 2.2
+        });
+    };
+
+    // Load the SDK asynchronously
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    // Here we run a very simple test of the Graph API after login is
+    // successful.  See statusChangeCallback() for when this call is made.
+    function sendTokenToServer() {
+        var access_token = FB.getAuthResponse()['accessToken'];
+        console.log(access_token)
+        console.log('Welcome!  Fetching your information.... ');
+        FB.api('/me', function(response) {
+            console.log('Successful login for: ' + response.name);
+            $.ajax({
+                type: 'POST',
+                url: '/fbconnect?state={{session['state']}}',
+                processData: false,
+                data: access_token,
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function(result) {
+                    // Handle or verify the server response if necessary.
+                    if (result) {
+                        $('#signinButton').remove();
+                        $('.account').text(result);
+                        setTimeout(function() {
+                            window.location.href = "/";
+                        }, 1000);
+
+                    } else {
+                        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                    }
+                }
+
+            });
+        });
+    }
+    </script>
+    
+</body>
+
+</html>
